@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary: #1D4E9E;
+  --primary-light: #3A6FBF;
+  --primary-dark: #143A75;
+  --accent: #E53935;
+  --bg: #F4F6FA;
+  --card-bg: #ffffff;
+  --text: #111111;
+  --text-secondary: #5A6478;
+  --success: #2E7D32;
+  --success-light: #4CAF50;
+  --error: #E53935;
+  --warning: #F57C00;
+  --border: rgba(29, 78, 158, 0.08);
+  --shadow-sm: 0 2px 8px rgba(29, 78, 158, 0.06);
+  --shadow-md: 0 4px 16px rgba(29, 78, 158, 0.08);
+  --shadow-lg: 0 8px 32px rgba(29, 78, 158, 0.12);
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Glassmorphism utilities ─────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-card-strong {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(29, 78, 158, 0.08);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Status indicators ───────────────────────────────── */
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(46, 125, 50, 0); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(229, 57, 53, 0); }
+}
+
+@keyframes pulse-gray {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(107, 122, 144, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(107, 122, 144, 0); }
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.connected {
+  background: var(--success-light);
+  animation: pulse-green 2s infinite;
+}
+
+.status-dot.disconnected {
+  background: var(--error);
+  animation: pulse-red 2s infinite;
+}
+
+.status-dot.waiting {
+  background: var(--text-secondary);
+  animation: pulse-gray 2s infinite;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-slide-in {
+  animation: slideInLeft 0.4s ease forwards;
+}
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD1DE;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9BA5B7;
+}
+
+/* ── Custom table styling ────────────────────────────── */
+.data-table-container {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* ── Result Banners ──────────────────────────────────── */
+.result-banner {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: var(--transition);
+}
+
+.result-banner.ok {
+  background: linear-gradient(135deg, #2E7D32, #4CAF50);
+  color: white;
+}
+
+.result-banner.ng {
+  background: linear-gradient(135deg, #C62828, #E53935);
+  color: white;
+}
+
+.result-banner.waiting {
+  background: linear-gradient(135deg, #4A5568, #6B7A90);
+  color: white;
+}

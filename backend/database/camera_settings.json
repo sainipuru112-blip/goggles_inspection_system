@@ -1,0 +1,6 @@
+{
+  "source_type": "ip_camera",
+  "rtsp_url": "http://192.168.1.8:8080/video",
+  "video_path": "",
+  "webcam_index": 0
+}
