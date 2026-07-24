@@ -16,6 +16,7 @@ router = APIRouter(prefix="/api/settings", tags=["Settings"])
 class SettingsUpdate(BaseModel):
     source_type: Optional[str] = None
     rtsp_url: Optional[str] = None
+    webrtc_url: Optional[str] = None
     video_path: Optional[str] = None
     confidence_threshold: Optional[float] = None
     frame_width: Optional[int] = None
@@ -25,8 +26,9 @@ class SettingsUpdate(BaseModel):
 
 
 class CameraSwitch(BaseModel):
-    source_type: str  # "webcam" | "rtsp" | "video" | "ip_camera"
+    source_type: str  # "webcam" | "rtsp" | "video" | "ip_camera" | "rpi_webrtc"
     rtsp_url: Optional[str] = None
+    webrtc_url: Optional[str] = None
     video_path: Optional[str] = None
     webcam_index: Optional[int] = 0
 
@@ -39,6 +41,7 @@ async def get_settings():
     return JSONResponse(content={
         "source_type": config.SOURCE_TYPE,
         "rtsp_url": config.RTSP_URL,
+        "webrtc_url": config.WEBRTC_URL,
         "video_path": config.VIDEO_PATH,
         "confidence_threshold": config.CONFIDENCE_THRESHOLD,
         "frame_width": config.FRAME_WIDTH,
@@ -59,6 +62,8 @@ async def update_settings(body: SettingsUpdate):
         config.SOURCE_TYPE = body.source_type
     if body.rtsp_url is not None:
         config.RTSP_URL = body.rtsp_url
+    if body.webrtc_url is not None:
+        config.WEBRTC_URL = body.webrtc_url
     if body.video_path is not None:
         config.VIDEO_PATH = body.video_path
     if body.confidence_threshold is not None:
@@ -91,6 +96,7 @@ async def switch_camera(body: CameraSwitch):
     result = camera.switch_source(
         source_type=body.source_type,
         rtsp_url=body.rtsp_url,
+        webrtc_url=body.webrtc_url,
         video_path=body.video_path,
         webcam_index=body.webcam_index or 0,
     )
@@ -100,6 +106,7 @@ async def switch_camera(body: CameraSwitch):
     save_camera_settings(
         source_type=body.source_type,
         rtsp_url=body.rtsp_url or "",
+        webrtc_url=body.webrtc_url or "",
         video_path=body.video_path or "",
         webcam_index=body.webcam_index or 0,
     )
@@ -141,6 +148,16 @@ async def available_sources():
                 ],
             },
             {
+                "type": "rpi_webrtc",
+                "label": "RPi WebRTC",
+                "description": "Raspberry Pi WebRTC low-latency stream",
+                "icon": "developer_board",
+                "fields": [
+                    {"name": "webrtc_url", "label": "WebRTC Stream URL", "type": "text",
+                     "placeholder": "http://sainipuru.local:8889/cam/"}
+                ],
+            },
+            {
                 "type": "rtsp",
                 "label": "RTSP Camera",
                 "description": "Network camera via RTSP protocol",
@@ -170,6 +187,5 @@ async def available_sources():
                      "placeholder": "C:\\path\\to\\video.mp4"}
                 ],
             },
-
         ]
     })

@@ -15,10 +15,12 @@ import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import SwapHorizRoundedIcon from "@mui/icons-material/SwapHorizRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
+import DeveloperBoardRoundedIcon from "@mui/icons-material/DeveloperBoardRounded";
 import { settingsApi } from "../../api/client";
 
 const SOURCE_ICONS = {
   webcam: <VideocamRoundedIcon />,
+  rpi_webrtc: <DeveloperBoardRoundedIcon />,
   rtsp: <LinkedCameraRoundedIcon />,
   ip_camera: <CameraOutdoorRoundedIcon />,
   video: <MovieRoundedIcon />,
@@ -26,6 +28,7 @@ const SOURCE_ICONS = {
 
 const SOURCE_LABELS = {
   webcam: "Webcam",
+  rpi_webrtc: "RPi WebRTC",
   rtsp: "RTSP Camera",
   ip_camera: "IP Camera",
   video: "Video File",
@@ -33,6 +36,7 @@ const SOURCE_LABELS = {
 
 const SOURCE_DESCRIPTIONS = {
   webcam: "Local USB or built-in webcam",
+  rpi_webrtc: "Raspberry Pi WebRTC low-latency stream",
   rtsp: "Network camera via RTSP protocol",
   ip_camera: "Network camera via HTTP/MJPEG stream",
   video: "Playback from a recorded video file",
@@ -49,6 +53,7 @@ export default function SettingsPage() {
   const [selectedSource, setSelectedSource] = useState("webcam");
   const [cameraFields, setCameraFields] = useState({
     rtsp_url: "",
+    webrtc_url: "http://sainipuru.local:8889/cam/",
     video_path: "",
     webcam_index: 0,
   });
@@ -61,6 +66,7 @@ export default function SettingsPage() {
       setSelectedSource(data.source_type || "webcam");
       setCameraFields({
         rtsp_url: data.rtsp_url || "",
+        webrtc_url: data.webrtc_url || "http://sainipuru.local:8889/cam/",
         video_path: data.video_path || "",
         webcam_index: 0,
       });
@@ -102,6 +108,9 @@ export default function SettingsPage() {
       source_type: selectedSource,
       webcam_index: cameraFields.webcam_index,
     };
+    if (selectedSource === "rpi_webrtc") {
+      payload.webrtc_url = cameraFields.webrtc_url;
+    }
     if (selectedSource === "rtsp" || selectedSource === "ip_camera") {
       payload.rtsp_url = cameraFields.rtsp_url;
     }
@@ -232,11 +241,11 @@ export default function SettingsPage() {
 
               {/* Source Type Cards */}
               <Grid container spacing={2} sx={{ mb: 3 }}>
-                {["webcam", "rtsp", "ip_camera", "video"].map((type) => {
+                {["webcam", "rpi_webrtc", "rtsp", "ip_camera", "video"].map((type) => {
                   const isSelected = selectedSource === type;
                   const isActive = cameraStatus?.source_type === type && cameraStatus?.connected;
                   return (
-                    <Grid size={{ xs: 12, sm: 6, md: 3 }} key={type}>
+                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }} key={type}>
                       <Box
                         onClick={() => setSelectedSource(type)}
                         sx={{
@@ -330,6 +339,17 @@ export default function SettingsPage() {
                       />
                     </Grid>
                   </Grid>
+                )}
+
+                {selectedSource === "rpi_webrtc" && (
+                  <TextField
+                    fullWidth
+                    label="WebRTC Stream URL"
+                    value={cameraFields.webrtc_url}
+                    onChange={(e) => setCameraFields({ ...cameraFields, webrtc_url: e.target.value })}
+                    placeholder="http://sainipuru.local:8889/cam/"
+                    helperText="URL of the Raspberry Pi WebRTC / HTTP video stream"
+                  />
                 )}
 
                 {(selectedSource === "rtsp" || selectedSource === "ip_camera") && (
