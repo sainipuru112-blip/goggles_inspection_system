@@ -1,6 +1,6 @@
 {
-  "source_type": "rtsp",
-  "rtsp_url": "rtsp://192.168.43.224:8554/cam",
+  "source_type": "webcam",
+  "rtsp_url": "",
   "webrtc_url": "http://sainipuru.local:8889/cam/",
   "video_path": "",
   "webcam_index": 0

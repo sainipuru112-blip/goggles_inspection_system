@@ -1,10 +1,31 @@
+# Hypervise AI Vision Platform - Backend Dependencies
+# Generated on Python 3.15 / Windows
+
+# --- Core API Framework ---
 fastapi>=0.115.0
-uvicorn[standard]>=0.30.0
+uvicorn>=0.30.0
+starlette>=0.46.0
+
+# --- Database ---
 sqlalchemy>=2.0.35
 aiosqlite>=0.20.0
+greenlet>=3.0.0          # Required by SQLAlchemy async on Python 3.12+
+
+# --- File Upload / Forms ---
 python-multipart>=0.0.12
+
+# --- Computer Vision ---
 opencv-python-headless>=4.10.0
-ultralytics>=8.3.0
 numpy>=1.26.0
-websockets>=13.0
 Pillow>=10.4.0
+
+# --- AI / Detection ---
+ultralytics>=8.3.0
+
+# --- WebSockets ---
+websockets>=13.0
+
+# --- Uvicorn extras (without pyyaml which needs C++ build tools) ---
+httptools>=0.6.0
+watchfiles>=0.20.0
+python-dotenv>=0.13
