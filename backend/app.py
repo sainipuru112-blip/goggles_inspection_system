@@ -11,6 +11,7 @@ import threading
 import time
 from contextlib import asynccontextmanager
 
+import config
 import cv2
 import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -397,6 +398,8 @@ async def lifespan(app):
     _cfg.SOURCE_TYPE = saved_cam["source_type"]
     if saved_cam["rtsp_url"]:
         _cfg.RTSP_URL = saved_cam["rtsp_url"]
+    if saved_cam.get("webrtc_url"):
+        _cfg.WEBRTC_URL = saved_cam["webrtc_url"]
     if saved_cam["video_path"]:
         _cfg.VIDEO_PATH = saved_cam["video_path"]
     camera._webcam_index = saved_cam.get("webcam_index", 0)

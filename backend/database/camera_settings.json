@@ -1,6 +1,7 @@
 {
-  "source_type": "ip_camera",
-  "rtsp_url": "http://192.168.1.8:8080/video",
+  "source_type": "webcam",
+  "rtsp_url": "",
+  "webrtc_url": "http://sainipuru.local:8889/cam/",
   "video_path": "",
   "webcam_index": 0
 }

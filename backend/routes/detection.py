@@ -47,11 +47,14 @@ async def get_frame():
             media_type="image/jpeg",
         )
 
-    _, jpeg = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    _, jpeg = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
     return StreamingResponse(
         io.BytesIO(jpeg.tobytes()),
         media_type="image/jpeg",
-        headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Connection": "keep-alive",
+        },
     )
 
 

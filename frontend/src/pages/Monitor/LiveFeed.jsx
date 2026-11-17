@@ -67,10 +67,10 @@ export default function LiveFeed() {
         // Silently ignore — will retry on next tick
       }
 
-      // Schedule next frame (~15 FPS target, adjusts for fetch time)
-      if (!cancelled) {
-        timeoutId = setTimeout(fetchFrame, 66);
-      }
+        // Schedule next frame (~6 FPS target to prevent network congestion)
+        if (!cancelled) {
+          timeoutId = setTimeout(fetchFrame, 160);
+        }
     };
 
     fetchFrame();

@@ -6,6 +6,24 @@ All tuneable parameters live here. Override via environment variables where note
 
 import os
 
+# Force OpenCV FFmpeg backend to use TCP for RTSP streams with low-latency, corruption-resilient settings
+# - rtsp_transport;tcp        → use TCP to prevent UDP packet loss (main cause of H264 macroblock errors)
+# - fflags;nobuffer+discardcorrupt → no buffering + discard corrupt packets at demuxer level
+# - analyzeduration;0         → don't wait to analyze stream format (faster start)
+# - probesize;32768           → minimal probe size for faster connection
+# - max_delay;0               → no reorder delay tolerance
+# - reorder_queue_size;0      → disable packet reorder buffer for lower latency
+# - stimeout;5000000          → 5-second connection/read timeout (microseconds)
+os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = (
+    "rtsp_transport;tcp"
+    "|fflags;nobuffer+discardcorrupt"
+    "|analyzeduration;0"
+    "|probesize;32768"
+    "|max_delay;0"
+    "|reorder_queue_size;0"
+    "|stimeout;5000000"
+)
+
 # ── Paths ──────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_DIR = os.path.join(BASE_DIR, "database")
@@ -19,9 +37,10 @@ os.makedirs(WEIGHTS_DIR, exist_ok=True)
 DATABASE_URL = f"sqlite+aiosqlite:///{os.path.join(DATABASE_DIR, 'hypervise.db')}"
 
 # ── Video Source ───────────────────────────────────────
-# SOURCE_TYPE: "rtsp" | "video" | "webcam"
-SOURCE_TYPE = os.environ.get("SOURCE_TYPE", "video")
+# SOURCE_TYPE: "rtsp" | "video" | "webcam" | "ip_camera" | "rpi_webrtc"
+SOURCE_TYPE = os.environ.get("SOURCE_TYPE", "webcam")
 RTSP_URL = os.environ.get("RTSP_URL", "rtsp://admin:admin@192.168.1.68:554/Streaming/Channels/101")
+WEBRTC_URL = os.environ.get("WEBRTC_URL", "http://sainipuru.local:8889/cam/")
 VIDEO_PATH = os.environ.get("VIDEO_PATH", r"C:\Users\Eternal\Downloads\sample_video.mp4")
 
 # ── Inference Settings ─────────────────────────────────

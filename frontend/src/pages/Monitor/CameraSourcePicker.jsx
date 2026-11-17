@@ -20,10 +20,12 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
+import DeveloperBoardRoundedIcon from "@mui/icons-material/DeveloperBoardRounded";
 import { settingsApi } from "../../api/client";
 
 const SOURCES = [
   { type: "webcam", label: "Webcam", icon: <VideocamRoundedIcon sx={{ fontSize: 18 }} /> },
+  { type: "rpi_webrtc", label: "RPi WebRTC", icon: <DeveloperBoardRoundedIcon sx={{ fontSize: 18 }} /> },
   { type: "rtsp", label: "RTSP", icon: <LinkedCameraRoundedIcon sx={{ fontSize: 18 }} /> },
   { type: "ip_camera", label: "IP Cam", icon: <CameraOutdoorRoundedIcon sx={{ fontSize: 18 }} /> },
   { type: "video", label: "Video", icon: <MovieRoundedIcon sx={{ fontSize: 18 }} /> },
@@ -35,6 +37,7 @@ export default function CameraSourcePicker() {
   const [selectedSource, setSelectedSource] = useState("webcam");
   const [fields, setFields] = useState({
     rtsp_url: "",
+    webrtc_url: "http://sainipuru.local:8889/cam/",
     video_path: "",
     webcam_index: 0,
   });
@@ -52,6 +55,7 @@ export default function CameraSourcePicker() {
       setFields((prev) => ({
         ...prev,
         rtsp_url: camStatus.rtsp_url || prev.rtsp_url,
+        webrtc_url: camStatus.webrtc_url || prev.webrtc_url,
         video_path: camStatus.video_path || prev.video_path,
       }));
     }
@@ -69,6 +73,9 @@ export default function CameraSourcePicker() {
       source_type: selectedSource,
       webcam_index: fields.webcam_index,
     };
+    if (selectedSource === "rpi_webrtc") {
+      payload.webrtc_url = fields.webrtc_url;
+    }
     if (selectedSource === "rtsp" || selectedSource === "ip_camera") {
       payload.rtsp_url = fields.rtsp_url;
     }
@@ -238,6 +245,22 @@ export default function CameraSourcePicker() {
                 helperText="0 = Default camera"
                 sx={{
                   "& .MuiOutlinedInput-root": { borderRadius: "10px", fontSize: "0.85rem" },
+                  "& .MuiFormHelperText-root": { fontSize: "0.65rem" },
+                }}
+              />
+            )}
+
+            {selectedSource === "rpi_webrtc" && (
+              <TextField
+                fullWidth
+                size="small"
+                label="WebRTC Stream URL"
+                value={fields.webrtc_url}
+                onChange={(e) => setFields({ ...fields, webrtc_url: e.target.value })}
+                placeholder="http://sainipuru.local:8889/cam/"
+                helperText="Raspberry Pi WebRTC / HTTP stream URL"
+                sx={{
+                  "& .MuiOutlinedInput-root": { borderRadius: "10px", fontSize: "0.8rem" },
                   "& .MuiFormHelperText-root": { fontSize: "0.65rem" },
                 }}
               />

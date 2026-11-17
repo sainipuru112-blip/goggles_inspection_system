@@ -13,6 +13,7 @@ SETTINGS_FILE = os.path.join(BASE_DIR, "database", "camera_settings.json")
 DEFAULT_SETTINGS = {
     "source_type": "webcam",
     "rtsp_url": "",
+    "webrtc_url": "http://sainipuru.local:8889/cam/",
     "video_path": "",
     "webcam_index": 0,
 }
@@ -31,11 +32,12 @@ def load_camera_settings() -> dict:
     return DEFAULT_SETTINGS.copy()
 
 
-def save_camera_settings(source_type: str, rtsp_url: str = "", video_path: str = "", webcam_index: int = 0):
+def save_camera_settings(source_type: str, rtsp_url: str = "", video_path: str = "", webcam_index: int = 0, webrtc_url: str = ""):
     """Save camera settings to disk."""
     data = {
         "source_type": source_type,
         "rtsp_url": rtsp_url,
+        "webrtc_url": webrtc_url or "http://sainipuru.local:8889/cam/",
         "video_path": video_path,
         "webcam_index": webcam_index,
     }
